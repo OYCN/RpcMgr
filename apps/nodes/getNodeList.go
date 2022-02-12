@@ -6,51 +6,72 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
+	"webbk/config"
 )
 
-type tagItem struct {
-	Name string `json:"name"`
-	Color string `json:"color"`
-}
-
-type nodeItem struct {
-	Key uint64 `json:"key"`
-	Name string `json:"name"`
-	Tags []tagItem `json:"tags"`
-}
-
-var tagList = [...]tagItem{
+var tagList = [...]TagItem{
 	{"cpu", "#2db7f5"},
 	{"x86", "#2db7f5"},
 	{"gpu", "#87d068"},
 	{"sm75", "#87d068"},
 }
 
+const maxGetNum int = 100
+const maxGetSize int = config.NodesMaxSizeInOnce
+
+type argsTemp struct {
+	Start	int `form:"start" binding:"required"`
+	Size	int `form:"size" binding:"required"`
+}
+
 func HandleNodesGetNodeList(c *gin.Context) {
-	start, startErr := strconv.Atoi(c.Query("start"))
-	step, stepErr := strconv.Atoi(c.Query("step"))
-	if startErr != nil && stepErr != nil {
-		c.String(503,
-			"Err to parse input to Int:\n" +
-			"start: " + c.Query("start") + "\n" +
-			"step: "  + c.Query("start"))
+	var args argsTemp
+	if err := c.ShouldBindQuery(&args); err != nil {
+		ret := config.Ret {
+			Status: false,
+			Data: err.Error(),
+		}
+		c.JSON(400, ret)
 		return
 	}
-	if start + step > 17 {
-		step = 0
+	start := args.Start
+	size := args.Size
+	if start < 0 {
+		start = maxGetNum + start
 	}
-	rets := make([]nodeItem, step)
+	if size < 0 {
+		ret := config.Ret {
+			Status: false,
+			Data: "size must be positive",
+		}
+		c.JSON(400, ret)
+		return
+	}
+	if size > maxGetSize {
+		ret := config.Ret {
+			Status: false,
+			Data: "Exceeded maximum step",
+		}
+		c.JSON(400, ret)
+		return
+	}
+	rets := make([]NodeItem, size)
 	for retsIdx, _ := range rets {
-		tags := make([]tagItem, 1)
+		tags := make([]TagItem, 1)
 		for tagsIdx, _ := range tags {
 			tags[tagsIdx] = tagList[rand.Intn(len(tagList))]
 		}
-		rets[retsIdx] = nodeItem {
+		rets[retsIdx] = NodeItem {
 			Key: uint64(start + retsIdx),
 			Name: strconv.Itoa(int(start + retsIdx)),
 			Tags: tags,
 		}
 	}
 	fmt.Println(rets)
-	c.JSON(200, rets)
+	ret := config.Ret {
+		Status: true,
+		Data: rets,
+	}
+	c.JSON(200, ret)
 }

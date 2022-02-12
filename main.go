@@ -9,7 +9,8 @@ import (
 
 func main() {
 	r := gin.New()
-	middleware.Load(r)
-	routers.Load(r)
+	e := r.Group("/api")
+	middleware.Load(e)
+	routers.Load(e)
 	r.Run("0.0.0.0:8000")
 }

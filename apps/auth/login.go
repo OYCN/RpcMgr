@@ -1,31 +1,33 @@
 package auth
 
 import (
+	"fmt"
+
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+
+	"webbk/config"
 )
 
-type loginForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Remember bool `json:"remember" binding:"required"`
-	Token string `json:"token" binding:"required"`
-}
-
-type loginRet struct {
-	Status bool `json:"status"`
-	Msg string `json:"msg"`
-}
-
 func HandleLogin(c *gin.Context) {
-	var form loginForm
+	var form LoginForm
 	err := c.ShouldBindJSON(&form);
 	if err != nil {
-		c.JSON(503, gin.H{"error": err.Error()})
+		c.JSON(400, config.Ret {
+			Status: false,
+			Data: err.Error(),
+		})
 		return
 	}
-	ret := loginRet {
+	fmt.Println(form.Username)
+	fmt.Println(form.Password)
+	fmt.Println(form.Remember)
+	session := sessions.Default(c)
+	session.Set("isLogined", true)
+	session.Save()
+	ret := config.Ret {
 		Status: true,
-		Msg: "success",
+		Data: "success",
 	}
 	c.JSON(200, ret)
 }
