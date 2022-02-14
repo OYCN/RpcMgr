@@ -1,8 +1,6 @@
 name: Go
 
-on:
-  push:
-    branches: [ dev-ci ]
+on: push
 
 jobs:
 
@@ -16,5 +14,12 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: Build
-      run: go build -v ./main.go
+    - name: Build-linux-amd64
+      run: env GOOS=linux GOARCH=amd64 go build -o webbk-linux-amd64
+
+    - name: upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: webbk-linux-amd64
+        path: ./webbk-linux-amd64
+        retention-days: 1
