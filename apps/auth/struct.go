@@ -5,3 +5,8 @@ type LoginForm struct {
 	Password string `json:"password" binding:"required"`
 	Remember bool `json:"remember"`
 }
+
+type RegisterForm struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}

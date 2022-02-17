@@ -1,6 +1,7 @@
 package main
 
 import (
+	"webbk/db"
 	"webbk/middleware"
 	"webbk/routers"
 
@@ -8,6 +9,7 @@ import (
 )
 
 func main() {
+	db.Init()
 	r := gin.New()
 	e := r.Group("/api")
 	middleware.Load(e)
