@@ -84,7 +84,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"opluss\",\r\n    \"password\": \"123456\"\r\n}",
+					"raw": "{\r\n    \"username\": \"opluss\",\r\n    \"password\": \"123456\",\r\n    \"remember\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -240,18 +240,18 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/nodes/list?start=-10&size=1",
+					"raw": "{{baseUrl}}/nodes/nodes?start=0&size=1",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"nodes",
-						"list"
+						"nodes"
 					],
 					"query": [
 						{
 							"key": "start",
-							"value": "-10"
+							"value": "0"
 						},
 						{
 							"key": "size",
@@ -340,6 +340,108 @@
 					"path": [
 						"auth",
 						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Node",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-CSRF-TOKEN",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"nodeA\",\r\n    \"tags\": [\r\n        \"cpu\"\r\n    ],\r\n    \"url\": \"xxx\",\r\n    \"port\": 12345,\r\n    \"cpunum\": 8,\r\n    \"gpunum\": 1,\r\n    \"cpumem\": 1024,\r\n    \"gpumem\": 1024\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/nodes/node",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"nodes",
+						"node"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rpc Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Http Status Test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Ret Status Test\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.status).to.eq(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/rpc/get",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rpc",
+						"get"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Creat RPC Ctx",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-CSRF-TOKEN",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nodeid\": 1,\r\n    \"asset\": {\r\n        \"cpunum\": 2,\r\n        \"gpunum\": 1,\r\n        \"cpumem\": 512,\r\n        \"gpumem\": 512\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/rpc/ctx",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"rpc",
+						"ctx"
 					]
 				}
 			},
