@@ -5,5 +5,6 @@ import (
 )
 
 func Routers(e *gin.RouterGroup) {
-	e.GET("/list", HandleNodesGetNodeList)
+	e.GET("/nodes", HandleNodesGetNodeList)
+	e.POST("/node", HandleAddNode)
 }

@@ -23,6 +23,9 @@ func Init() {
 	}
 
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Tag{})
+	db.AutoMigrate(&Node{})
+	db.AutoMigrate(&RpcCtx{})
 
 	Db = db
 }

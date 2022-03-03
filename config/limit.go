@@ -1,3 +1,3 @@
 package config
 
-const NodesMaxSizeInOnce int = 10
+const NodesMaxSizeInOnce int64 = 10

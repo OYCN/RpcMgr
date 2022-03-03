@@ -6,4 +6,5 @@ import (
 
 func Routers(e *gin.RouterGroup) {
 	e.GET("/get", HandleDefaultRpc)
+	e.POST("/ctx", HandleCreatCtx)
 }

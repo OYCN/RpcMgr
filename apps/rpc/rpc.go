@@ -1,9 +1,14 @@
 package rpc
 
 import (
+	"webbk/config"
+
 	"github.com/gin-gonic/gin"
 )
 
 func HandleDefaultRpc(c *gin.Context) {
-	c.String(200, "rpc")
+	c.JSON(200, config.Ret {
+		Status: true,
+		Data: "hello",
+	})
 }
